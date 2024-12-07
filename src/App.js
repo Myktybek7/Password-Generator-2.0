@@ -5,6 +5,9 @@ const PasswordGenerator = () => {
   const [length, setLength] = useState(12);
   const [error, setError] = useState('');
   const [strength, setStrength] = useState('');
+  const [history, setHistory] = useState(
+    JSON.parse(localStorage.getItem('passwordHistory')) || []
+  );
 
   const assessPasswordStrength = (password) => {
     let score = 0;
@@ -34,6 +37,13 @@ const PasswordGenerator = () => {
     const passwordStrength = assessPasswordStrength(newPassword);
     setPassword(newPassword);
     setStrength(passwordStrength);
+    addToHistory(newPassword);
+  };
+
+  const addToHistory = (newPassword) => {
+    const newHistory = [...history, { password: newPassword, strength }];
+    setHistory(newHistory);
+    localStorage.setItem('passwordHistory', JSON.stringify(newHistory));
   };
 
   return (
@@ -58,6 +68,13 @@ const PasswordGenerator = () => {
           <p><strong>Strength:</strong> {strength}</p>
         </div>
       )}
+
+      <h2>Password History</h2>
+      <ul>
+        {history.map((entry, index) => (
+          <li key={index}>{entry.password} - {entry.strength}</li>
+        ))}
+      </ul>
     </div>
   );
 };
