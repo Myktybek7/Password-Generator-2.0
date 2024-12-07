@@ -3,8 +3,14 @@ import React, { useState } from 'react';
 const PasswordGenerator = () => {
   const [password, setPassword] = useState('');
   const [length, setLength] = useState(12);
+  const [error, setError] = useState('');
 
   const generatePassword = () => {
+    setError('');
+    if (length < 6 || length > 32) {
+      setError('Password length must be between 6 and 32 characters.');
+      return;
+    }
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&+=!,.?';
     let newPassword = '';
     for (let i = 0; i < length; i++) {
@@ -28,6 +34,7 @@ const PasswordGenerator = () => {
       </label>
       <br />
       <button onClick={generatePassword}>Generate Password</button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {password && <p><strong>Your password:</strong> {password}</p>}
     </div>
   );
